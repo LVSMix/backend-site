@@ -1,5 +1,11 @@
 Site de BANodejs by Luis Ventocilla
 
-Only backend api
+La misma utilza:
 
-view-engine ==> npm install express-handlebars
+- Nodejs
+- express
+- express-sessions
+- mongoose
+- body-parser
+- bootstrap
+- express-handlebars git: https://github.com/ericf/express-handlebars
