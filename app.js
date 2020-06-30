@@ -47,7 +47,10 @@ app.post("/registro",function(req,res){
     console.log(req.body.email);
     console.log(req.body.password);
     var user = new User({email:req.body.email, password: req.body.password});
-    user.save(function(){
+    user.save(function(err){
+        if (err){
+            console.log(String(err));
+        }
         res.send("Envio Recibido");
     });
 })
