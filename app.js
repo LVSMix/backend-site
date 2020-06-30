@@ -2,6 +2,10 @@ var express = require("express"),
     service = require("./services/service"),
     exphbs  = require('express-handlebars'),
     bodyParser = require('body-parser'),
+    session = require('express-session'),
+    session_middleware = require('./middleware/session');
+    router = require('./route'),
+
     User = require('./models/user').User;
 
 
@@ -12,6 +16,13 @@ var app = express();
 //Add static content
 app.use("public",express.static('public'));
 app.use(express.static(__dirname + '/node_modules/bootstrap/dist'));
+
+//session
+app.use(session({
+    secret: "123erdsdfty2ub",
+    resave: false,
+    saveUninitialized: false
+}));
 
 //body-parser
 app.use(bodyParser.json());
@@ -26,6 +37,7 @@ app.get("/api",function(req,res){
 })
 
 app.get("/",function(req,res){
+    console.log(req.session.user_id);
     res.render('index');
 });
 
@@ -34,10 +46,13 @@ app.get("/login",function(req,res){
 });
 
 app.post("/login",function(req,res){
-   User.find({email:req.body.email,password:req.body.password},function(err,docs){
-    if (err) res.send("Not Authorized");
-    console.log(docs);
-    res.send("Login Successfull");
+   User.findOne({email:req.body.email,password:req.body.password},function(err,user){
+    if (err || !user) res.send("Not Authorized");
+    else {
+        console.log(user);
+        req.session.user_id = user._id;
+        res.send("Login Successfull");
+    }
    });
 });
 
@@ -57,6 +72,10 @@ app.post("/registro",function(req,res){
         }
     });
 })
+
+app.use(session_middleware);
+//router
+app.use("/app",router);
 
 app.listen(3030);
 
