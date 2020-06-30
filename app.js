@@ -34,12 +34,10 @@ app.get("/login",function(req,res){
 });
 
 app.post("/login",function(req,res){
-   User.find({email:req.body.email},function(err, doc){
-       if (err) res.send("Not Authorized");
-       else {
-           console.log(doc);
-           res.send("Login Successfull");
-       }
+   User.find({email:req.body.email,password:req.body.password},function(err,docs){
+    if (err) res.send("Not Authorized");
+    console.log(docs);
+    res.send("Login Successfull");
    });
 });
 
@@ -51,11 +49,12 @@ app.post("/registro",function(req,res){
     console.log(req.body.email);
     console.log(req.body.password);
     var user = new User({email:req.body.email, password: req.body.password});
-    user.save(function(err,user,numero){
+    user.save().then(function(user){
+        res.send("Guardamos el usuario exitosamente");
+    },function(err){
         if (err){
             console.log(String(err));
         }
-        res.send("Envio Recibido");
     });
 })
 
