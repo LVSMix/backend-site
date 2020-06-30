@@ -10,11 +10,30 @@ var email_match = [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "Ingresa mai
 var user_schema = new Schema({
     name: String,
     username:String,
-    password:String,
-    age:{type:Number,min:[5,"La edad no puede ser menor que 5"],max:[100,"La edad no puede ser mayor que 5"]},
-    email:{type:String,required: "El correo es obligatorio",match:email_match},
+    password:{
+        type:String, 
+        minlength: [8, "El password es muy corto"],
+        validate:{
+            validator:function(p){
+                return this.password_confirmation == p;
+            },
+            message: "Las contraseñas no son iguales"
+        }
+    },
+    age:{
+        type:Number,
+        min:[5,"La edad no puede ser menor que 5"],max:[100,"La edad no puede ser mayor que 5"]
+    },
+    email:{
+        type:String,
+        required: "El correo es obligatorio",
+        match:email_match
+    },
     date_of_bitrh:Date,
-    sexo:{type:String,enum:{values:posibles_valores,message:"Opcion no valida"}}
+    sexo:{
+        type:String,
+        enum:{values:posibles_valores,message:"Opcion no valida"}
+    }
 });
 
 var User = mongoose.model("User",user_schema);

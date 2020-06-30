@@ -26,10 +26,14 @@ app.get("/api",function(req,res){
 })
 
 app.get("/",function(req,res){
-    res.render('login');
+    res.render('index');
 });
 
 app.get("/login",function(req,res){
+    res.render("login");
+});
+
+app.post("/login",function(req,res){
    User.find({email:req.body.email},function(err, doc){
        if (err) res.send("Not Authorized");
        else {
@@ -47,7 +51,7 @@ app.post("/registro",function(req,res){
     console.log(req.body.email);
     console.log(req.body.password);
     var user = new User({email:req.body.email, password: req.body.password});
-    user.save(function(err){
+    user.save(function(err,user,numero){
         if (err){
             console.log(String(err));
         }
